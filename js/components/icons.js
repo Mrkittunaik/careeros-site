@@ -50,6 +50,22 @@ const ICONS = {
   filter: '<path d="M3 4.5h18l-7 8.5V19l-4 2v-8L3 4.5Z"/>',
 
   x: '<path d="M6 6l12 12M18 6 6 18"/>',
+
+  compass: '<circle cx="12" cy="12" r="9.5"/><path d="m14.5 9.5-1.7 5.2-5.2 1.7 1.7-5.2 5.2-1.7Z"/>',
+
+  zap: '<path d="M12.5 2.5 4 13.5h6l-1 8 8.5-11h-6l1-8Z"/>',
+
+  rocket: '<path d="M12 2.5c2.5 1.5 5 5 5 9.5 0 2-1 4-2 5l-1.5-1.5c1-1 2-2.5 2-4"/><path d="M12 2.5c-2.5 1.5-5 5-5 9.5 0 2 1 4 2 5l1.5-1.5"/><path d="M8.5 15 6 17.5 5 21l3.5-1L11 17.5"/><path d="M9.5 12a2.5 2.5 0 1 0 5 0 2.5 2.5 0 0 0-5 0Z"/>',
+
+  'credit-card': '<rect x="2.5" y="5.5" width="19" height="13" rx="2"/><path d="M2.5 10h19"/><path d="M6 14.5h4"/>',
+
+  smartphone: '<rect x="6.5" y="2.5" width="11" height="19" rx="2"/><path d="M11 18.5h2"/>',
+
+  shield: '<path d="M12 2.5 4 5.5v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10v-6L12 2.5Z"/><path d="m8.5 12 2.5 2.5L15.5 9.5"/>',
+
+  'arrow-left': '<path d="M19 12H5"/><path d="m11 5.5-6.5 6.5 6.5 6.5"/>',
+
+  check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
 };
 
 const FILLED_ICONS = {
