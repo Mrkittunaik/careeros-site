@@ -1,0 +1,168 @@
+/* plans.css — plan detail page */
+
+.plan-detail-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+}
+
+.plan-detail__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: var(--space-lg);
+  transition: color var(--transition-fast);
+}
+
+.plan-detail__back svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
+
+.plan-detail__back:hover {
+  color: var(--text-primary);
+}
+
+.plan-detail {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.plan-detail__art {
+  position: relative;
+  height: 160px;
+  background: linear-gradient(135deg, #0A0A0A, #0F3D2E);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.plan-detail__art svg.plan-detail__pattern {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.plan-detail__icon {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  color: var(--text-primary);
+}
+
+.plan-detail__icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+}
+
+.plan-detail__body {
+  padding: var(--space-xl) var(--space-lg);
+}
+
+.plan-detail__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.plan-detail__title-row h1 {
+  font-size: 24px;
+}
+
+.plan-detail__badge {
+  font-size: 11px;
+  color: var(--accent-hover);
+  border: 1px solid var(--accent-hover);
+  border-radius: var(--radius);
+  padding: 3px 10px;
+}
+
+.plan-detail__desc {
+  font-size: 15px;
+  margin-bottom: var(--space-lg);
+}
+
+.plan-detail__price-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.plan-detail__amount {
+  font-size: 36px;
+  font-weight: var(--font-weight-heading);
+  color: var(--text-primary);
+}
+
+.plan-detail__period {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.plan-detail__strike {
+  font-size: 16px;
+  color: var(--text-secondary);
+  text-decoration: line-through;
+}
+
+.plan-detail__save {
+  font-size: 12px;
+  color: var(--accent-hover);
+  border: 1px solid var(--accent-hover);
+  border-radius: var(--radius);
+  padding: 2px 8px;
+}
+
+.plan-detail__features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.plan-detail__feature {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.plan-detail__feature svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--accent-hover);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.plan-detail__cta {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .plan-detail-page {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .plan-detail__body {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .plan-detail__amount {
+    font-size: 28px;
+  }
+}

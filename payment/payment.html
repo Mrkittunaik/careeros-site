@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareerOS — Checkout</title>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="payment.css" />
+  <!-- Razorpay Checkout script -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <header class="pay-nav">
+    <div class="pay-nav__inner">
+      <a class="pay-nav__logo" href="../index.html">
+        <img src="../assets/logo.svg" alt="CareerOS" width="20" height="20" />
+        <span>CareerOS</span>
+      </a>
+      <span class="pay-nav__secure">
+        <span data-icon="shield"></span>
+        <span>Secure checkout</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="pay-page">
+    <a href="plans.html" class="pay-back" id="pay-back-link">
+      <span data-icon="arrow-left"></span>
+      <span>Back</span>
+    </a>
+
+    <div class="pay-layout">
+      <!-- Order summary -->
+      <section class="pay-summary card" id="pay-summary">
+        <div class="skeleton" style="height: 180px;"></div>
+      </section>
+
+      <!-- Payment method -->
+      <section class="pay-methods card">
+        <h2>Choose payment method</h2>
+        <p class="pay-methods__hint">Powered by Razorpay — UPI, cards, netbanking &amp; wallets.</p>
+
+        <div class="pay-method-list">
+          <button type="button" class="pay-method-option is-selected" data-method="upi">
+            <span class="pay-method-option__icon" data-icon="smartphone"></span>
+            <span class="pay-method-option__label">
+              <span>UPI</span>
+              <span class="pay-method-option__sub">Google Pay, PhonePe, Paytm &amp; more</span>
+            </span>
+            <span class="pay-method-option__check" data-icon="check"></span>
+          </button>
+
+          <button type="button" class="pay-method-option" data-method="card">
+            <span class="pay-method-option__icon" data-icon="credit-card"></span>
+            <span class="pay-method-option__label">
+              <span>Credit / Debit card</span>
+              <span class="pay-method-option__sub">Visa, Mastercard, RuPay, Amex</span>
+            </span>
+            <span class="pay-method-option__check" data-icon="check"></span>
+          </button>
+
+          <button type="button" class="pay-method-option" data-method="netbanking">
+            <span class="pay-method-option__icon" data-icon="shield"></span>
+            <span class="pay-method-option__label">
+              <span>Netbanking</span>
+              <span class="pay-method-option__sub">All major Indian banks</span>
+            </span>
+            <span class="pay-method-option__check" data-icon="check"></span>
+          </button>
+        </div>
+
+        <button type="button" class="btn btn-primary pay-submit-btn" id="pay-submit-btn">
+          <span data-icon="shield"></span>
+          <span id="pay-submit-label">Pay securely</span>
+        </button>
+
+        <p class="pay-footnote">
+          Payments are processed by Razorpay. CareerOS never stores your card or UPI details.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="payment.js"></script>
+</body>
+</html>
