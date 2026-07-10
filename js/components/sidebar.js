@@ -13,15 +13,32 @@ export const NAV_ITEMS = [
 ];
 
 /**
+ * True when the current page IS the SPA shell (app.html), where router.js is
+ * listening for hashchange. False on standalone pages like onboarding.html or
+ * login.html, where a bare "#/dashboard" href would just rewrite the hash and
+ * do nothing.
+ * @returns {boolean}
+ */
+function isInsideAppShell() {
+  return window.location.pathname.endsWith('/app.html');
+}
+
+/**
  * Renders both the desktop sidebar and mobile bottom tab bar markup.
  * This is rendered ONCE into the app shell — it is never removed or re-inserted
  * when the active view changes, only the .is-active classes update.
  * @returns {string} HTML string
  */
 export function renderSidebar() {
+  // On app.html, links are bare hashes so router.js can intercept them without
+  // a page reload. On any other page (onboarding, login, etc.), the SPA router
+  // isn't running, so links must point back to the app shell itself.
+  const hrefFor = (route) =>
+    isInsideAppShell() ? `#${route}` : `../app/app.html#${route}`;
+
   const navItems = NAV_ITEMS.map(
     (item) => `
-      <a class="sidebar__nav-item" href="#${item.route}" data-route="${item.route}">
+      <a class="sidebar__nav-item" href="${hrefFor(item.route)}" data-route="${item.route}">
         ${icon(item.icon, 18)}
         <span>${item.label}</span>
       </a>`
@@ -29,7 +46,7 @@ export function renderSidebar() {
 
   const bottomTabItems = NAV_ITEMS.map(
     (item) => `
-      <a class="bottom-tab-bar__item" href="#${item.route}" data-route="${item.route}" aria-label="${item.label}">
+      <a class="bottom-tab-bar__item" href="${hrefFor(item.route)}" data-route="${item.route}" aria-label="${item.label}">
         ${icon(item.icon, 20)}
       </a>`
   ).join('');
