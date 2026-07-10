@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareerOS — Onboarding</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/onboarding.css" />
+</head>
+<body>
+  <div class="page-layout" id="page-layout">
+    <!-- Sidebar injected by sidebar.js. Note: "onboarding" is intentionally NOT a nav
+         item (see master prompt nav list) since this is a one-time setup page; the
+         sidebar still renders here with no item highlighted, giving the user a way to
+         navigate away if they want to explore before finishing setup. -->
+
+    <main class="page-layout__main">
+      <div class="onboarding">
+        <div class="onboarding__header">
+          <h1>Set up your profile</h1>
+          <p>Tell us about yourself and add your documents so CareerOS can apply on your behalf.</p>
+        </div>
+
+        <!-- Card 1: About you -->
+        <section class="card onboarding-card">
+          <h2>About you</h2>
+          <p class="onboarding-card__hint">A short paragraph describing your background, skills, and what you're looking for.</p>
+
+          <div class="input-group">
+            <textarea class="input onboarding-textarea" id="about-textarea" placeholder="I'm a product designer with 5 years of experience..." maxlength="2000"></textarea>
+            <div class="onboarding-char-counter" id="char-counter">0 / 2000</div>
+          </div>
+
+          <div class="onboarding-card__actions">
+            <button type="button" class="btn btn-primary btn-small" id="save-about-btn">Save</button>
+          </div>
+        </section>
+
+        <!-- Card 2: Documents -->
+        <section class="card onboarding-card">
+          <h2>Documents</h2>
+          <p class="onboarding-card__hint">Add your resume, cover letters, or portfolio links.</p>
+
+          <div class="doc-tabs">
+            <button type="button" class="toggle-tab is-active" id="tab-upload" data-tab="upload">Upload file</button>
+            <button type="button" class="toggle-tab" id="tab-link" data-tab="link">Paste link</button>
+          </div>
+
+          <div class="doc-mode" id="mode-upload">
+            <div class="input-group">
+              <label class="input-label" for="upload-title-input">Title</label>
+              <input class="input" type="text" id="upload-title-input" placeholder="e.g. Resume — Senior PM" />
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="file-input">File</label>
+              <label class="file-input-wrapper" for="file-input">
+                <span id="file-input-label">Choose a file</span>
+              </label>
+              <input type="file" id="file-input" class="file-input-native" />
+            </div>
+            <button type="button" class="btn btn-primary btn-small" id="upload-doc-btn">Upload</button>
+          </div>
+
+          <div class="doc-mode" id="mode-link" hidden>
+            <div class="input-group">
+              <label class="input-label" for="link-title-input">Title</label>
+              <input class="input" type="text" id="link-title-input" placeholder="e.g. Portfolio site" />
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="link-url-input">URL</label>
+              <input class="input" type="url" id="link-url-input" placeholder="https://..." />
+            </div>
+            <button type="button" class="btn btn-primary btn-small" id="save-link-btn">Save</button>
+          </div>
+
+          <div class="doc-list" id="doc-list">
+            <div class="skeleton" style="height: 44px;" id="doc-list-skeleton"></div>
+          </div>
+        </section>
+
+        <div class="onboarding__footer">
+          <button type="button" class="btn btn-primary" id="continue-btn" disabled>
+            Continue to dashboard
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="js/pages/onboarding.js"></script>
+</body>
+</html>

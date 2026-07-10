@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareerOS — Apply to jobs on autopilot</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/home.css" />
+</head>
+<body>
+  <!-- Top nav -->
+  <header class="top-nav">
+    <div class="top-nav__inner">
+      <a class="top-nav__logo" href="home.html">
+        <img src="assets/logo.svg" alt="CareerOS" width="22" height="22" />
+        <span>CareerOS</span>
+      </a>
+      <nav class="top-nav__links">
+        <a href="#how-it-works">How it works</a>
+        <a href="#features">Features</a>
+      </nav>
+      <a class="btn btn-primary top-nav__cta" href="index.html">Log in</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main>
+    <section class="hero">
+      <h1>Apply to jobs, on autopilot.</h1>
+      <p class="hero__subtitle">
+        CareerOS finds relevant roles across job boards, prepares your application, and
+        queues it for review — so you spend less time searching and more time interviewing.
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn-primary" href="index.html">Get started</a>
+        <a class="btn btn-secondary" href="#how-it-works">See how it works</a>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section" id="how-it-works">
+      <h2>How it works</h2>
+      <div class="steps-grid">
+        <div class="card step-card">
+          <span class="step-card__icon" data-icon="briefcase"></span>
+          <h3>Tell us what you want</h3>
+          <p>Set your job type, experience level, and target sites.</p>
+        </div>
+        <div class="card step-card">
+          <span class="step-card__icon" data-icon="cpu"></span>
+          <h3>The bot gets to work</h3>
+          <p>CareerOS scans job boards and prepares each application for you.</p>
+        </div>
+        <div class="card step-card">
+          <span class="step-card__icon" data-icon="check-circle"></span>
+          <h3>You stay in control</h3>
+          <p>Every application is queued for your review — nothing is submitted without you.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section" id="features">
+      <h2>Features</h2>
+      <div class="features-grid">
+        <div class="card feature-card">
+          <span class="feature-card__icon" data-icon="database"></span>
+          <h3>Your data, your choice</h3>
+          <p>Use our hosted database or connect your own MongoDB instance.</p>
+        </div>
+        <div class="card feature-card">
+          <span class="feature-card__icon" data-icon="mail"></span>
+          <h3>Gmail integration</h3>
+          <p>Connect Gmail so CareerOS can watch for recruiter replies automatically.</p>
+        </div>
+        <div class="card feature-card">
+          <span class="feature-card__icon" data-icon="key"></span>
+          <h3>Bring your own AI</h3>
+          <p>Use our AI provider or plug in your own API key from Groq, OpenAI, or Claude.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="site-footer__brand">
+        <span class="top-nav__logo">
+          <img src="assets/logo.svg" alt="CareerOS" width="18" height="18" />
+          <span>CareerOS</span>
+        </span>
+        <p>Made in India.</p>
+      </div>
+      <div class="site-footer__links">
+        <a href="index.html">Log in</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#features">Features</a>
+      </div>
+    </div>
+    <p class="site-footer__copyright">© 2026 CareerOS. All rights reserved.</p>
+  </footer>
+
+  <script type="module" src="js/pages/home.js"></script>
+</body>
+</html>
