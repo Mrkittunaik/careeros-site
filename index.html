@@ -12,15 +12,19 @@
   <!-- Top nav -->
   <header class="top-nav">
     <div class="top-nav__inner">
-      <a class="top-nav__logo" href="home.html">
+      <a class="top-nav__logo" href="index.html">
         <img src="assets/logo.svg" alt="CareerOS" width="22" height="22" />
         <span>CareerOS</span>
       </a>
       <nav class="top-nav__links">
         <a href="#how-it-works">How it works</a>
         <a href="#features">Features</a>
+        <a href="#plans">Plans</a>
       </nav>
-      <a class="btn btn-primary top-nav__cta" href="index.html">Log in</a>
+      <div class="top-nav__auth">
+        <a class="btn btn-secondary top-nav__cta" href="login.html">Log in</a>
+        <a class="btn btn-primary top-nav__cta" href="login.html#signup">Sign up</a>
+      </div>
     </div>
   </header>
 
@@ -33,7 +37,7 @@
         queues it for review — so you spend less time searching and more time interviewing.
       </p>
       <div class="hero__actions">
-        <a class="btn btn-primary" href="index.html">Get started</a>
+        <a class="btn btn-primary" href="login.html#signup">Get started</a>
         <a class="btn btn-secondary" href="#how-it-works">See how it works</a>
       </div>
     </section>
@@ -81,6 +85,78 @@
         </div>
       </div>
     </section>
+
+    <!-- Plans -->
+    <section class="section" id="plans">
+      <h2>Plans</h2>
+      <p class="plans-subtitle">Simple pricing. Cancel anytime.</p>
+
+      <div class="plans-grid">
+        <!-- Free -->
+        <div class="plan-card">
+          <div class="plan-card__art plan-card__art--free">
+            <svg viewBox="0 0 200 120" class="plan-card__pattern" preserveAspectRatio="xMidYMid slice">
+              <circle cx="30" cy="30" r="50" fill="rgba(255,255,255,0.04)" />
+              <circle cx="170" cy="90" r="60" fill="rgba(255,255,255,0.03)" />
+            </svg>
+            <span class="plan-card__icon" data-icon="compass"></span>
+          </div>
+          <div class="plan-card__body">
+            <h3>Free</h3>
+            <p class="plan-card__desc">Get started and try the basics with no cost.</p>
+            <div class="plan-card__price">
+              <span class="plan-card__amount">₹0</span>
+              <span class="plan-card__period">/ forever</span>
+            </div>
+            <a class="btn btn-secondary plan-card__cta" href="payment/plans.html?plan=free">See plan</a>
+          </div>
+        </div>
+
+        <!-- 49 plan -->
+        <div class="plan-card">
+          <div class="plan-card__art plan-card__art--starter">
+            <svg viewBox="0 0 200 120" class="plan-card__pattern" preserveAspectRatio="xMidYMid slice">
+              <circle cx="20" cy="100" r="55" fill="rgba(31,122,82,0.25)" />
+              <circle cx="180" cy="10" r="45" fill="rgba(31,122,82,0.15)" />
+            </svg>
+            <span class="plan-card__icon" data-icon="zap"></span>
+          </div>
+          <div class="plan-card__body">
+            <div class="plan-card__badge">Most picked</div>
+            <h3>Starter</h3>
+            <p class="plan-card__desc">For active job seekers applying every week.</p>
+            <div class="plan-card__price">
+              <span class="plan-card__amount">₹49</span>
+              <span class="plan-card__period">/ month</span>
+              <span class="plan-card__strike">₹199</span>
+            </div>
+            <a class="btn btn-primary plan-card__cta" href="payment/plans.html?plan=starter">See plan</a>
+          </div>
+        </div>
+
+        <!-- 399 plan -->
+        <div class="plan-card">
+          <div class="plan-card__art plan-card__art--pro">
+            <svg viewBox="0 0 200 120" class="plan-card__pattern" preserveAspectRatio="xMidYMid slice">
+              <circle cx="150" cy="20" r="60" fill="rgba(31,122,82,0.3)" />
+              <circle cx="30" cy="110" r="40" fill="rgba(255,255,255,0.04)" />
+            </svg>
+            <span class="plan-card__icon" data-icon="rocket"></span>
+          </div>
+          <div class="plan-card__body">
+            <div class="plan-card__badge">Best value</div>
+            <h3>Pro</h3>
+            <p class="plan-card__desc">Unlimited applications and priority AI matching.</p>
+            <div class="plan-card__price">
+              <span class="plan-card__amount">₹399</span>
+              <span class="plan-card__period">/ year</span>
+              <span class="plan-card__strike">₹499</span>
+            </div>
+            <a class="btn btn-primary plan-card__cta" href="payment/plans.html?plan=pro">See plan</a>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- Footer -->
@@ -94,9 +170,10 @@
         <p>Made in India.</p>
       </div>
       <div class="site-footer__links">
-        <a href="index.html">Log in</a>
+        <a href="login.html">Log in</a>
         <a href="#how-it-works">How it works</a>
         <a href="#features">Features</a>
+        <a href="#plans">Plans</a>
       </div>
     </div>
     <p class="site-footer__copyright">© 2026 CareerOS. All rights reserved.</p>
