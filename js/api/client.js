@@ -1,6 +1,6 @@
 // client.js
 
-export const API_BASE = 'http://localhost:8000/api/v1';
+export const API_BASE = 'https://career-newbackend.onrender.com/api/v1';
 
 const TOKEN_KEY = 'careeros_token';
 
