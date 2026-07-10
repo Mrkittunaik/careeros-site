@@ -1,0 +1,124 @@
+/* profile.css — page-specific layout only; components come from global.css */
+
+.profile {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.profile-textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: var(--font-family);
+  line-height: var(--line-height-base);
+}
+
+/* Locked key-style fields */
+.key-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.key-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.key-box__value {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 14px;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.key-box__toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.key-box__toggle:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+/* Documents */
+.documents-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.documents-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.documents-list__icon {
+  display: inline-flex;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.documents-list__title {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.documents-list__delete {
+  flex-shrink: 0;
+  display: inline-flex;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.documents-list__delete:hover {
+  color: var(--danger);
+}
+
+.profile-add-document {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 768px) {
+  .profile {
+    max-width: none;
+  }
+}

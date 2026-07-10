@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareerOS — Log in</title>
+  <link rel="icon" type="image/x-icon" href="../assets/favicon/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png" />
+  <link rel="manifest" href="../assets/favicon/site.webmanifest" />
+  <meta name="theme-color" content="#0F3D2E" />
+  <meta name="description" content="CareerOS automates your job search — apply to roles across LinkedIn, Indeed, Naukri and more, track every application, and never miss a recruiter reply." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="CareerOS" />
+  <meta property="og:title" content="CareerOS — Apply to jobs on autopilot" />
+  <meta property="og:description" content="Automate your job search, track applications in real time, and catch every recruiter reply — all from one dashboard." />
+  <meta property="og:image" content="../assets/favicon/android-chrome-512x512.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="CareerOS — Apply to jobs on autopilot" />
+  <meta name="twitter:description" content="Automate your job search, track applications in real time, and catch every recruiter reply." />
+  <meta name="twitter:image" content="../assets/favicon/android-chrome-512x512.png" />
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/login.css" />
+</head>
+<body>
+  <div class="login-page">
+    <div class="card login-card">
+      <div class="login-card__logo">
+        <span class="login-card__wordmark">CareerOS</span>
+      </div>
+
+      <!--
+        NOTE: The Google button below intentionally breaks from the app's color system
+        (--bg / --surface / --accent etc). Google's brand guidelines require their
+        "Continue with Google" button to use a white/light background with the official
+        4-color G logo — this is the one deliberate exception to the design system.
+      -->
+      <button type="button" class="btn btn-google" id="google-login-btn">
+        <span id="google-icon-slot"></span>
+        <span>Continue with Google</span>
+      </button>
+
+      <div class="login-divider">
+        <span>or</span>
+      </div>
+
+      <form id="login-form" novalidate>
+        <div class="input-group">
+          <label class="input-label" for="email-input">Email</label>
+          <input class="input" type="email" id="email-input" name="email" placeholder="you@example.com" autocomplete="email" required />
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="password-input">Password</label>
+          <input class="input" type="password" id="password-input" name="password" placeholder="••••••••" autocomplete="current-password" required />
+        </div>
+
+        <div class="input-error" id="form-error" aria-live="polite"></div>
+
+        <button type="submit" class="btn btn-primary login-submit-btn" id="submit-btn">
+          Log in
+        </button>
+      </form>
+
+      <div class="login-toggle">
+        <span id="toggle-text">Don't have an account?</span>
+        <a href="#" id="toggle-mode-link">Sign up</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/pages/login.js"></script>
+</body>
+</html>

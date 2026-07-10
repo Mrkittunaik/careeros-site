@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareerOS — Plan details</title>
+  <link rel="icon" type="image/x-icon" href="../assets/favicon/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png" />
+  <link rel="manifest" href="../assets/favicon/site.webmanifest" />
+  <meta name="theme-color" content="#0F3D2E" />
+  <meta name="description" content="CareerOS automates your job search — apply to roles across LinkedIn, Indeed, Naukri and more, track every application, and never miss a recruiter reply." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="CareerOS" />
+  <meta property="og:title" content="CareerOS" />
+  <meta property="og:description" content="Automate your job search, track applications in real time, and catch every recruiter reply." />
+  <meta property="og:image" content="../assets/favicon/android-chrome-512x512.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="CareerOS" />
+  <meta name="twitter:description" content="Automate your job search, track applications in real time, and catch every recruiter reply." />
+  <meta name="twitter:image" content="../assets/favicon/android-chrome-512x512.png" />
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/home.css" />
+  <link rel="stylesheet" href="plans.css" />
+</head>
+<body>
+  <!-- Top nav -->
+  <header class="top-nav">
+    <div class="top-nav__inner">
+      <a class="top-nav__logo" href="../index.html">
+        <img src="../assets/logo.svg" alt="CareerOS" width="22" height="22" />
+        <span>CareerOS</span>
+      </a>
+      <nav class="top-nav__links">
+        <a href="../index.html#how-it-works">How it works</a>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#plans">Plans</a>
+      </nav>
+      <div class="top-nav__auth">
+        <a class="btn btn-secondary top-nav__cta" href="../auth/login.html">Log in</a>
+        <a class="btn btn-primary top-nav__cta" href="../auth/login.html#signup">Sign up</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="plan-detail-page">
+    <a href="../index.html#plans" class="plan-detail__back">
+      <span data-icon="arrow-left"></span>
+      <span>Back to plans</span>
+    </a>
+
+    <div class="plan-detail" id="plan-detail">
+      <!-- Populated by plans.js -->
+      <div class="skeleton" style="height: 320px;"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="site-footer__brand">
+        <span class="top-nav__logo">
+          <img src="../assets/logo.svg" alt="CareerOS" width="18" height="18" />
+          <span>CareerOS</span>
+        </span>
+        <p>Made in India.</p>
+      </div>
+      <div class="site-footer__links">
+        <a href="../auth/login.html">Log in</a>
+        <a href="../index.html#how-it-works">How it works</a>
+        <a href="../index.html#features">Features</a>
+      </div>
+    </div>
+    <p class="site-footer__copyright">© 2026 CareerOS. All rights reserved.</p>
+  </footer>
+
+  <script type="module" src="plans.js"></script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+/* dashboard.css — page-specific layout only; components come from global.css */
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* Bot status card */
+.bot-status-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.bot-status-card__last-seen {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Stats row */
+.dashboard-stat-row {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.dashboard-stat-row .stat-card {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .dashboard-stat-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+  }
+}
+
+/* Skeleton loading stack */
+.skeleton-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* Applications & HR cards */
+.applications-card,
+.hr-contacts-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Filter row */
+.filter-row {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.filter-row__search {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.filter-row__search-icon {
+  position: absolute;
+  left: var(--space-sm);
+  display: inline-flex;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.filter-row__search .input {
+  padding-left: 36px;
+}
+
+.filter-row__status {
+  width: 180px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .filter-row {
+    flex-direction: column;
+  }
+
+  .filter-row__status {
+    width: 100%;
+  }
+}
+
+/* Table cell helpers */
+.cell-link {
+  display: inline-flex;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.cell-link:hover {
+  color: var(--text-primary);
+}
+
+.cell-reply {
+  display: inline-flex;
+  color: var(--accent-hover);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: var(--space-xs);
+  border-radius: var(--radius);
+  transition: background var(--transition-fast);
+}
+
+.cell-reply:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Mobile card row helpers reuse .table-mobile-card__* from global.css */
+.table-mobile-card__row-value--link,
+.table-mobile-card__row-value--reply {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.modal-reply-snippet {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: var(--line-height-base);
+  margin-bottom: var(--space-md);
+}
+
+.modal-reply-gmail-link {
+  color: var(--accent-hover);
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.modal-reply-gmail-link:hover {
+  text-decoration: underline;
+}
