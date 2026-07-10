@@ -83,7 +83,12 @@ export function template() {
         <div class="reveal-section" id="mongo-url-section" hidden>
           <div class="input-group">
             <label class="input-label" for="mongo-url-input">MongoDB connection URL</label>
-            <input class="input" type="text" id="mongo-url-input" placeholder="mongodb+srv://..." />
+            <div class="password-field">
+              <input class="input" type="password" id="mongo-url-input" placeholder="mongodb+srv://..." autocomplete="off" />
+              <button type="button" class="password-field__toggle" id="mongo-url-toggle" aria-label="Show connection URL">
+                <span data-icon="eye"></span>
+              </button>
+            </div>
           </div>
           <div class="settings-card__actions settings-card__actions--between">
             <span class="status-dot" id="storage-test-status"></span>
@@ -118,7 +123,12 @@ export function template() {
           </div>
           <div class="input-group">
             <label class="input-label" for="ai-api-key-input">API key</label>
-            <input class="input" type="password" id="ai-api-key-input" placeholder="sk-..." />
+            <div class="password-field">
+              <input class="input" type="password" id="ai-api-key-input" placeholder="sk-..." autocomplete="off" />
+              <button type="button" class="password-field__toggle" id="ai-api-key-toggle" aria-label="Show API key">
+                <span data-icon="eye"></span>
+              </button>
+            </div>
           </div>
           <div class="settings-card__actions">
             <button type="button" class="btn btn-primary btn-small" id="save-ai-provider-btn">Save</button>
@@ -169,6 +179,7 @@ export function init(root) {
   const storageOptionOwn = root.querySelector('#storage-option-own');
   const mongoUrlSection = root.querySelector('#mongo-url-section');
   const mongoUrlInput = root.querySelector('#mongo-url-input');
+  const mongoUrlToggle = root.querySelector('#mongo-url-toggle');
   const testSaveStorageBtn = root.querySelector('#test-save-storage-btn');
   const storageTestStatus = root.querySelector('#storage-test-status');
 
@@ -177,6 +188,7 @@ export function init(root) {
   const aiProviderSection = root.querySelector('#ai-provider-section');
   const aiProviderSelect = root.querySelector('#ai-provider-select');
   const aiApiKeyInput = root.querySelector('#ai-api-key-input');
+  const aiApiKeyToggle = root.querySelector('#ai-api-key-toggle');
   const saveAiProviderBtn = root.querySelector('#save-ai-provider-btn');
 
   const gmailDisconnectedView = root.querySelector('#gmail-disconnected-view');
@@ -318,12 +330,25 @@ export function init(root) {
     }
   });
 
+  function wirePasswordToggle(input, toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      toggleBtn.innerHTML = icon(isHidden ? 'eye-off' : 'eye', 18);
+      toggleBtn.setAttribute('aria-label', isHidden ? 'Hide value' : 'Show value');
+    });
+  }
+
+  wirePasswordToggle(mongoUrlInput, mongoUrlToggle);
+  wirePasswordToggle(aiApiKeyInput, aiApiKeyToggle);
+
   function setStorageOption(value) {
     storageOptionOur.classList.toggle('is-selected', value === 'our');
     storageOptionOwn.classList.toggle('is-selected', value === 'own');
     storageOptionOur.querySelector('.toggle-box').classList.toggle('is-checked', value === 'our');
     storageOptionOwn.querySelector('.toggle-box').classList.toggle('is-checked', value === 'own');
     mongoUrlSection.hidden = value !== 'own';
+    mongoUrlInput.disabled = value !== 'own';
   }
 
   storageOptionOur.addEventListener('click', () => setStorageOption('our'));
@@ -365,6 +390,10 @@ export function init(root) {
     aiOptionOurs.querySelector('.toggle-box').classList.toggle('is-checked', value === 'ours');
     aiOptionOwn.querySelector('.toggle-box').classList.toggle('is-checked', value === 'own');
     aiProviderSection.hidden = value !== 'own';
+    // Belt-and-braces: disable the inputs too, so they can't be typed into
+    // even if the section is ever made visible via other means.
+    aiProviderSelect.disabled = value !== 'own';
+    aiApiKeyInput.disabled = value !== 'own';
   }
 
   aiOptionOurs.addEventListener('click', async () => {
