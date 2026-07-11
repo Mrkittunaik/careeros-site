@@ -12,6 +12,7 @@ import { showToast } from '../components/toast.js';
 import { icon } from '../components/icons.js';
 import { openModal } from '../components/modal.js';
 import { ApiError } from '../api/client.js';
+import { DashboardSocket } from '../ws/dashboardSocket.js';
 
 export function template() {
   return `
@@ -495,4 +496,23 @@ export function init(root) {
   }
 
   loadSettings();
+
+  // Live bot pairing status — event-driven off /ws/dashboard's bot_status
+  // events, no polling. GET /settings above only gives the initial snapshot;
+  // this keeps it accurate afterwards without refetching.
+  const socket = new DashboardSocket();
+  socket.on('bot_status', (data) => {
+    if (!data) return;
+    if (data.online) {
+      setOverviewStatus('bot', 'connected', 'online');
+    } else {
+      setOverviewStatus('bot', 'not paired', 'offline');
+    }
+  });
+  socket.connect();
+
+  // Returned to the router — called automatically when navigating away from this view.
+  return () => {
+    socket.disconnect();
+  };
 }
