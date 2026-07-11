@@ -7,16 +7,6 @@ import { ApiError } from '../api/client.js';
 export function template() {
   return `
     <div class="chat-view">
-      <aside class="chat-sidebar" id="chat-sidebar">
-        <button class="btn btn-primary chat-sidebar__new" id="chat-new-btn">
-          ${icon('plus', 16)}
-          <span>New chat</span>
-        </button>
-        <div class="chat-sidebar__list" id="chat-thread-list">
-          <div class="chat-sidebar__loading">Loading…</div>
-        </div>
-      </aside>
-
       <section class="chat-main">
         <header class="chat-topbar">
           <div class="chat-topbar__left">
@@ -61,6 +51,18 @@ export function template() {
           </form>
         </div>
       </section>
+
+      <aside class="chat-sidebar" id="chat-sidebar">
+        <button class="btn btn-primary chat-sidebar__new" id="chat-new-btn">
+          ${icon('plus', 16)}
+          <span>New chat</span>
+        </button>
+        <div class="chat-sidebar__list" id="chat-thread-list">
+          <div class="chat-sidebar__loading">Loading…</div>
+        </div>
+      </aside>
+
+      <div class="chat-sidebar-overlay" id="chat-sidebar-overlay"></div>
     </div>
   `;
 }
@@ -84,6 +86,7 @@ function formatThreadTime(iso) {
 
 export function init(root) {
   const sidebar = root.querySelector('#chat-sidebar');
+  const sidebarOverlay = root.querySelector('#chat-sidebar-overlay');
   const sidebarToggle = root.querySelector('#chat-sidebar-toggle');
   const threadListEl = root.querySelector('#chat-thread-list');
   const newChatBtn = root.querySelector('#chat-new-btn');
@@ -117,9 +120,19 @@ export function init(root) {
   setStatus(navigator.onLine === false ? 'offline' : 'online');
 
   // ---- sidebar collapse (mobile) ----
+  function openSidebar() {
+    sidebar.classList.add('chat-sidebar--open');
+    sidebarOverlay.classList.add('chat-sidebar-overlay--visible');
+  }
+  function closeSidebar() {
+    sidebar.classList.remove('chat-sidebar--open');
+    sidebarOverlay.classList.remove('chat-sidebar-overlay--visible');
+  }
   sidebarToggle.addEventListener('click', () => {
-    sidebar.classList.toggle('chat-sidebar--open');
+    if (sidebar.classList.contains('chat-sidebar--open')) closeSidebar();
+    else openSidebar();
   });
+  sidebarOverlay.addEventListener('click', closeSidebar);
 
   function scrollToBottom() {
     messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -206,7 +219,7 @@ export function init(root) {
       item.addEventListener('click', (e) => {
         if (e.target.closest('[data-delete]')) return;
         openConversation(c.id);
-        sidebar.classList.remove('chat-sidebar--open');
+        closeSidebar();
       });
 
       item.querySelector('[data-delete]').addEventListener('click', async (e) => {
@@ -273,7 +286,7 @@ export function init(root) {
 
   newChatBtn.addEventListener('click', () => {
     startNewChatLocal();
-    sidebar.classList.remove('chat-sidebar--open');
+    closeSidebar();
   });
 
   async function loadConversations() {
