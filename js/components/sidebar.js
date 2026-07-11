@@ -7,6 +7,7 @@ import { logout } from '../api/auth.js';
 
 export const NAV_ITEMS = [
   { key: 'dashboard', label: 'Dashboard', icon: 'home', route: '/dashboard' },
+  { key: 'chat', label: 'Chat', icon: 'message-square', route: '/chat' },
   { key: 'job-request', label: 'Start job search', icon: 'briefcase', route: '/job-request' },
   { key: 'profile', label: 'Profile', icon: 'key', route: '/profile' },
   { key: 'settings', label: 'Settings', icon: 'settings', route: '/settings' },
