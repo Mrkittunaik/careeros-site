@@ -2,6 +2,9 @@
 
 export const API_BASE = 'https://career-newbackend.onrender.com/api/v1';
 
+// Keep in sync with backend MAX_RESUME_BYTES in app/routers/profile.py
+export const MAX_RESUME_BYTES = 200 * 1024;
+
 const TOKEN_KEY = 'careeros_token';
 
 /**
