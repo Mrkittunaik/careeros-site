@@ -244,6 +244,64 @@
   color: var(--accent-hover);
 }
 
+/* ---- job intake status card ---- */
+
+.chat-intake-card {
+  align-self: flex-start;
+  margin: 6px 0 6px 34px;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-raised, rgba(255, 255, 255, 0.02));
+  max-width: 85%;
+  font-size: 13px;
+}
+
+.chat-intake-card__title {
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.chat-intake-card__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  color: var(--text-secondary);
+}
+
+.chat-intake-card__row--filled {
+  color: var(--text-primary);
+}
+
+.chat-intake-card__row svg {
+  flex-shrink: 0;
+}
+
+.chat-intake-card__row--filled svg {
+  color: var(--accent-hover);
+}
+
+.chat-intake-card__label {
+  font-weight: 500;
+  min-width: 90px;
+}
+
+.chat-intake-card__actions {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+.chat-intake-card__actions .btn {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
 /* ---- typing indicator ---- */
 
 .chat-typing {
