@@ -177,12 +177,72 @@ export function init(root) {
     const sites = (data.target_sites || []).join(', ');
     note.innerHTML = `
       ${icon('briefcase', 16)}
-      <span>Job search queued — <strong></strong> (<span class="chat-job-note__exp"></span>) on <span class="chat-job-note__sites"></span></span>
+      <span>Job search started — <strong></strong> (<span class="chat-job-note__exp"></span>) on <span class="chat-job-note__sites"></span></span>
     `;
     note.querySelector('strong').textContent = data.job_type || '';
     note.querySelector('.chat-job-note__exp').textContent = data.experience_level || 'any';
     note.querySelector('.chat-job-note__sites').textContent = sites;
     messagesEl.appendChild(note);
+    lastRole = null;
+    scrollToBottom();
+  }
+
+  // Shows what the intake flow has collected so far (role, location,
+  // experience type, sites) as a checklist, and — once everything's known
+  // — a Start/Not-yet button pair. Sending the buttons' text through the
+  // normal handleSend() path keeps this dead simple: "yes, start" and "no,
+  // let me change something" are just regular chat messages that the
+  // backend's intake state machine already knows how to interpret.
+  function renderIntakeCard(intake, awaitingConfirmation) {
+    if (!intake || Object.keys(intake).length === 0) return;
+
+    const card = document.createElement('div');
+    card.className = 'chat-intake-card';
+
+    const rows = [
+      ['Role', intake.role],
+      ['Location', intake.location],
+      ['Experience', intake.experience_type],
+      ['Company type', intake.company_pref],
+      ['Sites', (intake.target_sites || []).join(', ')],
+    ];
+
+    const rowsHtml = rows
+      .map(([label, value]) => {
+        const filled = Boolean(value);
+        return `
+          <div class="chat-intake-card__row${filled ? ' chat-intake-card__row--filled' : ''}">
+            ${icon(filled ? 'check-circle' : 'clock', 14)}
+            <span class="chat-intake-card__label">${label}</span>
+            <span>${filled ? value : 'not set yet'}</span>
+          </div>
+        `;
+      })
+      .join('');
+
+    card.innerHTML = `
+      <div class="chat-intake-card__title">Job search details</div>
+      ${rowsHtml}
+      ${awaitingConfirmation ? `
+        <div class="chat-intake-card__actions">
+          <button type="button" class="btn btn-primary" data-intake-action="start">${icon('check', 14)} Start automation</button>
+          <button type="button" class="btn btn-secondary" data-intake-action="cancel">${icon('x-circle', 14)} Not yet</button>
+        </div>
+      ` : ''}
+    `;
+
+    if (awaitingConfirmation) {
+      card.querySelector('[data-intake-action="start"]').addEventListener('click', () => {
+        card.querySelectorAll('button').forEach((b) => (b.disabled = true));
+        submitMessage('Yes, start automation.');
+      });
+      card.querySelector('[data-intake-action="cancel"]').addEventListener('click', () => {
+        card.querySelectorAll('button').forEach((b) => (b.disabled = true));
+        submitMessage("Not yet — let me change something.");
+      });
+    }
+
+    messagesEl.appendChild(card);
     lastRole = null;
     scrollToBottom();
   }
@@ -320,13 +380,10 @@ export function init(root) {
     openConversation(conversations[0].id);
   }
 
-  async function handleSend(e) {
-    e.preventDefault();
-    const text = input.value.trim();
+  async function submitMessage(text) {
     if (!text) return;
 
     renderMessage('user', text, new Date().toISOString());
-    input.value = '';
     input.disabled = true;
     sendBtn.disabled = true;
     showTyping(true);
@@ -337,8 +394,14 @@ export function init(root) {
       showTyping(false);
       setStatus(navigator.onLine === false ? 'offline' : 'online');
       renderMessage('assistant', result.reply, result.created_at || new Date().toISOString());
+
       if (result.intent === 'job_search' && result.job_request_id) {
         renderJobConfirmation(result);
+      } else if (result.intake) {
+        // Still mid-intake (or just got declined/adjusted) — show the
+        // running checklist so the user can see exactly what's been
+        // captured and what's still missing, without re-reading the chat.
+        renderIntakeCard(result.intake, result.awaiting_confirmation);
       }
 
       const isNewThread = !currentConversationId;
@@ -376,6 +439,14 @@ export function init(root) {
       sendBtn.disabled = false;
       input.focus();
     }
+  }
+
+  async function handleSend(e) {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    await submitMessage(text);
   }
 
   composer.addEventListener('submit', handleSend);
