@@ -4,6 +4,7 @@ import { renderSidebar, bindSidebarEvents } from './components/sidebar.js';
 import { registerRoute, startRouter } from './router.js';
 
 import * as dashboardView from './views/dashboard.js';
+import * as chatView from './views/chat.js';
 import * as jobRequestView from './views/job-request.js';
 import * as profileView from './views/profile.js';
 import * as settingsView from './views/settings.js';
@@ -15,6 +16,7 @@ document.getElementById('page-layout').insertAdjacentHTML('afterbegin', renderSi
 bindSidebarEvents();
 
 registerRoute('/dashboard', dashboardView);
+registerRoute('/chat', chatView);
 registerRoute('/job-request', jobRequestView);
 registerRoute('/profile', profileView);
 registerRoute('/settings', settingsView);
