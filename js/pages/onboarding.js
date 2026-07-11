@@ -4,7 +4,7 @@ import { getProfile, updateProfile, uploadDocument, linkDocument, deleteDocument
 import { showToast } from '../components/toast.js';
 import { icon } from '../components/icons.js';
 import { renderSidebar, bindSidebarEvents } from '../components/sidebar.js';
-import { ApiError } from '../api/client.js';
+import { ApiError, MAX_RESUME_BYTES } from '../api/client.js';
 
 requireAuth();
 
@@ -164,6 +164,11 @@ uploadDocBtn.addEventListener('click', async () => {
 
   if (!title || !file) {
     showToast('Add a title and choose a file.', 'error');
+    return;
+  }
+
+  if (file.size > MAX_RESUME_BYTES) {
+    showToast(`File too large — max 200KB, yours is ${Math.round(file.size / 1024)}KB.`, 'error');
     return;
   }
 
