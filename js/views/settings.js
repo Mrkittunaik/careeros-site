@@ -259,8 +259,8 @@ export function init(root) {
   }
 
   function populateBotPairing(settings) {
-    if (settings.bot_token_masked) {
-      maskedTokenEl.textContent = settings.bot_token_masked;
+    if (settings.masked_bot_token) {
+      maskedTokenEl.textContent = settings.masked_bot_token;
     }
   }
 
