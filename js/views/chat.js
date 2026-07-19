@@ -106,6 +106,9 @@ export function init(root) {
   let lastRole = null;
   let currentConversationId = null;
   let conversations = [];
+  let renderedMessageCount = 0; // how many messages of the current thread are already on screen
+  let pollTimer = null;
+  let pollInFlight = false;
 
   // ---- online/offline status (browser connectivity) ----
   function setStatus(state) {
@@ -322,10 +325,12 @@ export function init(root) {
     clearMessages();
     renderThreadList();
     updateHeaderForThread();
+    renderedMessageCount = 0;
     try {
       const history = await getConversationHistory(id);
       if (history && history.length > 0) {
         history.forEach((m) => renderMessage(m.role, m.content, m.created_at));
+        renderedMessageCount = history.length;
       }
     } catch (err) {
       // Thread may have just been created client-side with nothing sent
@@ -333,11 +338,64 @@ export function init(root) {
     }
   }
 
+  // ---- background polling for updates the bot/backend made on its own
+  // (e.g. a status change, a decision, a reply) while the user hasn't typed
+  // anything. Simple periodic check rather than a live push connection —
+  // good enough for chat text, and avoids a second live socket just for
+  // this view when /ws/dashboard already covers the richer live cards.
+  const POLL_INTERVAL_MS = 4000;
+
+  async function pollForUpdates() {
+    if (pollInFlight || !currentConversationId || document.hidden) return;
+    pollInFlight = true;
+    try {
+      const history = await getConversationHistory(currentConversationId);
+      if (history && history.length > renderedMessageCount) {
+        const newOnes = history.slice(renderedMessageCount);
+        newOnes.forEach((m) => renderMessage(m.role, m.content, m.created_at));
+        renderedMessageCount = history.length;
+        // Bump this thread in the sidebar the same way a manually-sent
+        // message would, so a bot-driven update surfaces there too.
+        const idx = conversations.findIndex((c) => c.id === currentConversationId);
+        if (idx !== -1) {
+          const [c] = conversations.splice(idx, 1);
+          c.updated_at = newOnes[newOnes.length - 1].created_at || new Date().toISOString();
+          conversations.unshift(c);
+          renderThreadList();
+        }
+      }
+    } catch (err) {
+      // Silent — a missed poll tick isn't worth surfacing as an error;
+      // the next tick just tries again.
+    } finally {
+      pollInFlight = false;
+    }
+  }
+
+  function startPolling() {
+    stopPolling();
+    pollTimer = setInterval(pollForUpdates, POLL_INTERVAL_MS);
+  }
+
+  function stopPolling() {
+    if (pollTimer) {
+      clearInterval(pollTimer);
+      pollTimer = null;
+    }
+  }
+
+  // Pause polling while the tab isn't visible, resume (and catch up
+  // immediately) when the user comes back to it.
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) pollForUpdates();
+  });
+
   function startNewChatLocal() {
     // Don't hit the create-conversation endpoint until the user actually
     // sends a message — an empty "New chat" thread with nothing in it
     // isn't worth persisting or cluttering the sidebar with.
     currentConversationId = null;
+    renderedMessageCount = 0;
     clearMessages();
     renderThreadList();
     threadTitleEl.textContent = 'New chat';
@@ -384,6 +442,7 @@ export function init(root) {
     if (!text) return;
 
     renderMessage('user', text, new Date().toISOString());
+    renderedMessageCount += 1;
     input.disabled = true;
     sendBtn.disabled = true;
     showTyping(true);
@@ -394,6 +453,7 @@ export function init(root) {
       showTyping(false);
       setStatus(navigator.onLine === false ? 'offline' : 'online');
       renderMessage('assistant', result.reply, result.created_at || new Date().toISOString());
+      renderedMessageCount += 1;
 
       if (result.intent === 'job_search' && result.job_request_id) {
         renderJobConfirmation(result);
@@ -453,4 +513,12 @@ export function init(root) {
 
   loadConversations();
   input.focus();
+  startPolling();
+
+  // Router calls this automatically right before mounting the next view —
+  // stops the interval so it doesn't keep polling in the background (or
+  // stack a second interval) after the user navigates away from Chat.
+  return function destroy() {
+    stopPolling();
+  };
 }
