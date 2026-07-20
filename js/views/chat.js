@@ -197,7 +197,20 @@ export function init(root) {
   // let me change something" are just regular chat messages that the
   // backend's intake state machine already knows how to interpret.
   function renderIntakeCard(intake, awaitingConfirmation) {
-    if (!intake || Object.keys(intake).length === 0) return;
+    const hasAnyRealField = Boolean(
+      intake &&
+        (intake.role ||
+          intake.location ||
+          intake.experience_type ||
+          intake.company_pref ||
+          (intake.target_sites && intake.target_sites.length) ||
+          intake.salary_expectation ||
+          intake.remote_pref ||
+          (intake.target_companies && intake.target_companies.length))
+    );
+    // Don't show an all-empty "not set yet" checklist before the user has
+    // given anything at all — it's just noise on the very first turn.
+    if (!hasAnyRealField) return;
 
     const card = document.createElement('div');
     card.className = 'chat-intake-card';
@@ -209,6 +222,14 @@ export function init(root) {
       ['Company type', intake.company_pref],
       ['Sites', (intake.target_sites || []).join(', ')],
     ];
+    // Optional fields only take up a row once they're actually known —
+    // no point showing "Remote preference: not set yet" when it's an
+    // optional detail most searches won't need at all.
+    if (intake.remote_pref) rows.push(['Remote preference', intake.remote_pref]);
+    if (intake.salary_expectation) rows.push(['Salary expectation', intake.salary_expectation]);
+    if (intake.target_companies && intake.target_companies.length) {
+      rows.push(['Target companies', intake.target_companies.join(', ')]);
+    }
 
     const rowsHtml = rows
       .map(([label, value]) => {
