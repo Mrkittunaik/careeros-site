@@ -88,6 +88,131 @@
   white-space: nowrap;
 }
 
+/* Per-site "login settings" key icon — only visible once a site is selected */
+.site-option__key {
+  margin-left: auto;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+}
+.site-option__key:hover {
+  color: var(--accent-hover);
+  background: rgba(15, 61, 46, 0.15);
+}
+
+/* "+" add-site tile */
+.site-option--add {
+  justify-content: center;
+  color: var(--text-secondary);
+  border-style: dashed;
+}
+.site-option--add:hover {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+}
+.site-option__add-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Inline add-site form, replaces the "+" tile while open */
+.site-option--add-form {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-xs);
+  cursor: default;
+  grid-column: span 1;
+}
+.site-option__add-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+}
+
+.input--sm {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+.btn--sm {
+  padding: 6px 12px;
+  font-size: 13px;
+  min-width: 0;
+}
+
+/* Per-site login credentials panel */
+.site-credentials-panel {
+  margin-top: var(--space-sm);
+}
+.site-credentials-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.site-credentials-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.site-credentials-card__close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.site-credentials-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+.site-credentials-mode {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-left: var(--space-md);
+  border-left: 2px solid var(--border);
+}
+.radio-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.radio-row input {
+  margin-top: 2px;
+}
+.site-credentials-manual {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-top: var(--space-xs);
+}
+.site-credentials-card__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .job-request-card__actions {
   display: flex;
   justify-content: flex-end;
