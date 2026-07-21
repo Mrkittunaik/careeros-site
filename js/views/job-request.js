@@ -1,10 +1,11 @@
 // views/job-request.js
 import { getDailyLimit, submitJobRequest } from '../api/jobs.js';
+import { getCustomSites, addCustomSite, getSiteCredentials, setSiteCredentials } from '../api/sites.js';
 import { showToast } from '../components/toast.js';
 import { icon } from '../components/icons.js';
 import { ApiError } from '../api/client.js';
 
-const SITES = [
+const BUILT_IN_SITES = [
   'LinkedIn',
   'Indeed',
   'Glassdoor',
@@ -51,6 +52,7 @@ export function template() {
           <div class="input-group">
             <label class="input-label">Target sites</label>
             <div class="site-grid" id="site-grid"></div>
+            <div class="site-credentials-panel" id="site-credentials-panel" hidden></div>
           </div>
 
           <div class="job-request-card__actions">
@@ -80,6 +82,7 @@ export function init(root) {
   const jobTypeInput = root.querySelector('#job-type-input');
   const experienceSelect = root.querySelector('#experience-select');
   const siteGrid = root.querySelector('#site-grid');
+  const credentialsPanel = root.querySelector('#site-credentials-panel');
   const submitBtn = root.querySelector('#submit-btn');
 
   const formView = root.querySelector('#form-view');
@@ -91,10 +94,19 @@ export function init(root) {
   let remaining = 0;
   let limit = 0;
   const selectedSites = new Set();
+  let customSites = []; // [{ title, url }] loaded from backend
+  let siteCredentials = {}; // { [siteLower]: { needs_login, credential_mode, ... } } loaded from backend
+  let addingSite = false; // whether the "+" tile's inline form is open
+  let openCredentialsSite = null; // which site's credentials panel is expanded, or null
+
+  function allSiteNames() {
+    return [...BUILT_IN_SITES, ...customSites.map((s) => s.title)];
+  }
 
   function renderSiteGrid() {
-    siteGrid.innerHTML = SITES.map(
-      (site) => `
+    const tiles = allSiteNames()
+      .map(
+        (site) => `
       <label class="site-option" data-site="${site}">
         <span class="checkbox-box" data-checkbox="${site}">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
@@ -102,18 +114,108 @@ export function init(root) {
           </svg>
         </span>
         <span class="site-option__label">${site}</span>
+        <button type="button" class="site-option__key" data-key-for="${site}" title="Login settings for ${site}" aria-label="Login settings for ${site}" hidden>
+          ${icon('key', 12)}
+        </button>
       </label>
     `
-    ).join('');
+      )
+      .join('');
 
-    siteGrid.querySelectorAll('.site-option').forEach((optionEl) => {
-      optionEl.addEventListener('click', () => toggleSite(optionEl.dataset.site));
+    const addTile = addingSite
+      ? `
+      <div class="site-option site-option--add-form" id="add-site-form">
+        <input type="text" class="input input--sm" id="add-site-title" placeholder="Title (e.g. AngelList)" />
+        <input type="text" class="input input--sm" id="add-site-url" placeholder="https://..." />
+        <div class="site-option__add-actions">
+          <button type="button" class="btn btn-secondary btn--sm" id="add-site-cancel">Cancel</button>
+          <button type="button" class="btn btn-primary btn--sm" id="add-site-save">Save</button>
+        </div>
+      </div>
+    `
+      : `
+      <label class="site-option site-option--add" id="add-site-tile">
+        <span class="site-option__add-icon">+</span>
+        <span class="site-option__label">Add site</span>
+      </label>
+    `;
+
+    siteGrid.innerHTML = tiles + addTile;
+
+    siteGrid.querySelectorAll('.site-option[data-site]').forEach((optionEl) => {
+      optionEl.addEventListener('click', (e) => {
+        if (e.target.closest('.site-option__key')) return; // key icon handles its own click below
+        toggleSite(optionEl.dataset.site);
+      });
     });
+
+    siteGrid.querySelectorAll('.site-option__key').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const site = btn.dataset.keyFor;
+        openCredentialsSite = openCredentialsSite === site ? null : site;
+        renderCredentialsPanel();
+      });
+    });
+
+    const addTileEl = siteGrid.querySelector('#add-site-tile');
+    if (addTileEl) {
+      addTileEl.addEventListener('click', () => {
+        addingSite = true;
+        renderSiteGrid();
+      });
+    }
+    const cancelBtn = siteGrid.querySelector('#add-site-cancel');
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', () => {
+        addingSite = false;
+        renderSiteGrid();
+      });
+    }
+    const saveBtn = siteGrid.querySelector('#add-site-save');
+    if (saveBtn) {
+      saveBtn.addEventListener('click', handleSaveCustomSite);
+    }
+
+    updateSiteVisuals();
+  }
+
+  async function handleSaveCustomSite() {
+    const titleInput = siteGrid.querySelector('#add-site-title');
+    const urlInput = siteGrid.querySelector('#add-site-url');
+    const title = titleInput.value.trim();
+    const url = urlInput.value.trim();
+
+    if (!title || !url) {
+      showToast('Enter both a title and a URL.', 'error');
+      return;
+    }
+    if (!/^https?:\/\//i.test(url)) {
+      showToast('URL must start with http:// or https://', 'error');
+      return;
+    }
+
+    try {
+      customSites = await addCustomSite(title, url);
+      addingSite = false;
+      selectedSites.add(title); // select it immediately — user just added it to use it
+      renderSiteGrid();
+      updateSubmitState();
+      showToast(`${title} added.`, 'success');
+    } catch (err) {
+      const message = err instanceof ApiError ? err.message : 'Could not save site.';
+      showToast(message, 'error');
+    }
   }
 
   function toggleSite(site) {
     if (selectedSites.has(site)) {
       selectedSites.delete(site);
+      if (openCredentialsSite === site) {
+        openCredentialsSite = null;
+        renderCredentialsPanel();
+      }
     } else {
       selectedSites.add(site);
     }
@@ -122,12 +224,115 @@ export function init(root) {
   }
 
   function updateSiteVisuals() {
-    siteGrid.querySelectorAll('.site-option').forEach((optionEl) => {
-      const isSelected = selectedSites.has(optionEl.dataset.site);
+    siteGrid.querySelectorAll('.site-option[data-site]').forEach((optionEl) => {
+      const site = optionEl.dataset.site;
+      const isSelected = selectedSites.has(site);
       optionEl.classList.toggle('is-selected', isSelected);
       const box = optionEl.querySelector('.checkbox-box');
       box.classList.toggle('is-checked', isSelected);
+      // The login-settings key only makes sense once a site is actually
+      // selected for this run — keeps the grid uncluttered otherwise.
+      const keyBtn = optionEl.querySelector('.site-option__key');
+      if (keyBtn) keyBtn.hidden = !isSelected;
     });
+  }
+
+  // ---------- Per-site login credentials panel ----------
+  function renderCredentialsPanel() {
+    if (!openCredentialsSite) {
+      credentialsPanel.hidden = true;
+      credentialsPanel.innerHTML = '';
+      return;
+    }
+
+    const site = openCredentialsSite;
+    const siteKey = site.toLowerCase();
+    const existing = siteCredentials[siteKey] || { needs_login: false, credential_mode: 'auto' };
+
+    credentialsPanel.hidden = false;
+    credentialsPanel.innerHTML = `
+      <div class="site-credentials-card">
+        <div class="site-credentials-card__header">
+          <span>Login settings — ${site}</span>
+          <button type="button" class="site-credentials-card__close" id="cred-close" aria-label="Close">&times;</button>
+        </div>
+
+        <label class="site-credentials-toggle">
+          <input type="checkbox" id="cred-needs-login" ${existing.needs_login ? 'checked' : ''} />
+          <span>This site asks for login/sign-in</span>
+        </label>
+
+        <div class="site-credentials-mode" id="cred-mode-wrap" ${existing.needs_login ? '' : 'hidden'}>
+          <label class="radio-row">
+            <input type="radio" name="cred-mode-${siteKey}" value="auto" ${existing.credential_mode !== 'manual' ? 'checked' : ''} />
+            <span>Auto — use my CareerOS account email, password generated automatically</span>
+          </label>
+          <label class="radio-row">
+            <input type="radio" name="cred-mode-${siteKey}" value="manual" ${existing.credential_mode === 'manual' ? 'checked' : ''} />
+            <span>Manual — set my own username &amp; password for ${site}</span>
+          </label>
+
+          <div class="site-credentials-manual" id="cred-manual-wrap" ${existing.credential_mode === 'manual' ? '' : 'hidden'}>
+            <input type="text" class="input input--sm" id="cred-username" placeholder="Username / email" />
+            <input type="password" class="input input--sm" id="cred-password" placeholder="Password" />
+            ${existing.has_manual_password ? `<div class="muted" style="font-size:11px;">Saved: ${existing.manual_username || 'a password is already saved'} — leave blank to keep it</div>` : ''}
+          </div>
+        </div>
+
+        <div class="site-credentials-card__actions">
+          <button type="button" class="btn btn-primary btn--sm" id="cred-save">Save</button>
+        </div>
+      </div>
+    `;
+
+    credentialsPanel.querySelector('#cred-close').addEventListener('click', () => {
+      openCredentialsSite = null;
+      renderCredentialsPanel();
+    });
+
+    const needsLoginCheckbox = credentialsPanel.querySelector('#cred-needs-login');
+    const modeWrap = credentialsPanel.querySelector('#cred-mode-wrap');
+    needsLoginCheckbox.addEventListener('change', () => {
+      modeWrap.hidden = !needsLoginCheckbox.checked;
+    });
+
+    const manualWrap = credentialsPanel.querySelector('#cred-manual-wrap');
+    credentialsPanel.querySelectorAll(`input[name="cred-mode-${siteKey}"]`).forEach((radio) => {
+      radio.addEventListener('change', () => {
+        manualWrap.hidden = radio.value !== 'manual' || !radio.checked;
+      });
+    });
+
+    credentialsPanel.querySelector('#cred-save').addEventListener('click', () => handleSaveCredentials(site, siteKey));
+  }
+
+  async function handleSaveCredentials(site, siteKey) {
+    const needsLogin = credentialsPanel.querySelector('#cred-needs-login').checked;
+    const modeInput = credentialsPanel.querySelector(`input[name="cred-mode-${siteKey}"]:checked`);
+    const credentialMode = modeInput ? modeInput.value : 'auto';
+
+    let manualUsername = null;
+    let manualPassword = null;
+    if (credentialMode === 'manual') {
+      manualUsername = credentialsPanel.querySelector('#cred-username').value.trim();
+      manualPassword = credentialsPanel.querySelector('#cred-password').value;
+
+      if (!manualUsername || !manualPassword) {
+        showToast('Enter both username and password for manual login.', 'error');
+        return;
+      }
+    }
+
+    try {
+      await setSiteCredentials(site, { needsLogin, credentialMode, manualUsername, manualPassword });
+      siteCredentials = await getSiteCredentials();
+      showToast(`Login settings saved for ${site}.`, 'success');
+      openCredentialsSite = null;
+      renderCredentialsPanel();
+    } catch (err) {
+      const message = err instanceof ApiError ? err.message : 'Could not save login settings.';
+      showToast(message, 'error');
+    }
   }
 
   function updateSubmitState() {
@@ -138,6 +343,18 @@ export function init(root) {
   }
 
   jobTypeInput.addEventListener('input', updateSubmitState);
+
+  async function loadCustomSitesAndCredentials() {
+    try {
+      const [sites, creds] = await Promise.all([getCustomSites(), getSiteCredentials()]);
+      customSites = sites;
+      siteCredentials = creds;
+      renderSiteGrid();
+    } catch (err) {
+      // Non-fatal — built-in sites still work fine without this.
+      renderSiteGrid();
+    }
+  }
 
   async function loadDailyLimit() {
     try {
@@ -204,6 +421,6 @@ export function init(root) {
     }
   });
 
-  renderSiteGrid();
+  loadCustomSitesAndCredentials();
   loadDailyLimit();
 }
