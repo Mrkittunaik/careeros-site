@@ -1,0 +1,8 @@
+/app/app          /app/app.html          200
+/app/dashboard    /app/dashboard.html    200
+/app/job-request  /app/job-request.html  200
+/app/settings     /app/settings.html     200
+/auth/login       /auth/login.html       200
+/auth/onboarding  /auth/onboarding.html  200
+/payment/payment  /payment/payment.html  200
+/payment/plans    /payment/plans.html    200
