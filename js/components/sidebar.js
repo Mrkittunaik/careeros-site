@@ -21,7 +21,8 @@ export const NAV_ITEMS = [
  * @returns {boolean}
  */
 function isInsideAppShell() {
-  return window.location.pathname.endsWith('/app.html');
+  const path = window.location.pathname;
+  return path.endsWith('/app.html') || path.endsWith('/app') || path.endsWith('/app/');
 }
 
 /**
