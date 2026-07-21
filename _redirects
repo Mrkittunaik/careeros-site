@@ -1,0 +1,8 @@
+/app/app          /app/app.html          301
+/app/dashboard    /app/dashboard.html    301
+/app/job-request  /app/job-request.html  301
+/app/settings     /app/settings.html     301
+/auth/login       /auth/login.html       301
+/auth/onboarding  /auth/onboarding.html  301
+/payment/payment  /payment/payment.html  301
+/payment/plans    /payment/plans.html    301
